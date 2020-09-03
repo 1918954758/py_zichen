@@ -1,4 +1,8 @@
+# @ProjectName: py_zichen
+# @Script: TupleBase
 # @discription: 列表，元组和字典
+# @Author: 子辰
+# @Date: 2020-09-04 00:44
 
 """
 元组（tuple）：元组是圆括号()包围的数据集合，可以通过序号访问元素
