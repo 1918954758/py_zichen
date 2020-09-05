@@ -23,7 +23,7 @@ while times > 0:
     elif guess_num < random_num:
         print('小了')
     else:
-        print('猜中了，正确答案是4：' + str(random_num))
+        print('猜中了，正确答案是：' + str(random_num))
         break
     times -= 1
     if times == 0:
