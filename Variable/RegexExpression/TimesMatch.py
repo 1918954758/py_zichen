@@ -21,3 +21,9 @@ list2 = re.findall('lemon+', match_str)
 print(list2)                    # output------>['lemon', 'lemonnnn']
 list3 = re.findall('lemon?', match_str)
 print(list3)                    # output------>['lemo', 'lemon', 'lemon']
+
+'''
+注意?含义
+    1. 如果?用在数量词{m,n}的后面，表示非贪婪匹配，数量词前面的字符匹配最小次数m次
+    2. 如果?用在字符后面，表示匹配零次或者一次?前面的字符
+'''
