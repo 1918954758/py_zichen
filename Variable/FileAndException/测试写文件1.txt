@@ -1,0 +1,7 @@
+"{\"python\" : 1, \"java\" : 2, \"Hadoop\" : null, \"lemon\" : true, \"banana\" : false}"又写入了一个lemon
+又写入了一个lemonlemonlemonlemonlemonlemonlemonlemon
+lemonlemonlemonelemon
+lemon
+lemon
+lemon
+lemon
