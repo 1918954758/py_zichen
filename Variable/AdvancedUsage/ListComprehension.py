@@ -64,7 +64,7 @@ print(e)
 需求： 将字典中的键与值，进行替换
 '''
 print('------------------字典推导式--------------------')
-f = {value:key for key, value in d.items()}
+f = {value: key for key, value in d.items()}
 print(f)
 
 '''字典的键必须是不可变类型，比如 字符串，元组，数字，，其他类型是不可以当作字典的键的'''
