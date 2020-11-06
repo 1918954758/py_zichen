@@ -1,0 +1,25 @@
+Python 基础语法
+    Python 语言与 Perl，C 等语言有许多相似之处。但是，也存在一些差异。
+1. 交互式编程
+    交互式编程不需要创建脚本文件，是通过Python解释器的交互模式来进行编写代码。
+    linux上只需要在命令行中输入Python命令即可启动交互式编程，
+    $ python
+    Python 2.7.6 (default, Sep 9 2014, 15:04:36)
+    [GCC 4.2.1 Compatible Apple LLVM 6.0 (clang-600.0.39)] on darwin
+    Type "help", "copyright", "credits" or "license" for more information.
+    >>>
+    Window上在安装Python时已经安装了交互式编程客户端，提示信息如下：
+    Python 2.7.4 (default, Apr 6 2013, 19:54:46) [MSC v.1500 32 (Intel)] on win32
+    Type "copyright", "credits" or "license()" for more information.
+    >>>
+
+2. 脚本式编程
+    通过脚本参数调用解释器开始执行脚本，直到脚本执行完毕。当脚本执行完成后，解释器不再有效。
+    让我们洗衣歌简单的Python脚本程序。所有Python文件将以 .py 为扩展名：
+    #!/usr/bin/python
+        # -*- coding: UTF-8 -*-
+        print("Hello, Python!")
+    这里，假设我们已经设置了Python解释器PATH变量。使用以下命令运行程序：
+        $ python test.py
+    输出：
+        Hello, Python!
