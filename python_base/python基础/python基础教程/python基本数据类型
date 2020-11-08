@@ -1,0 +1,352 @@
+Python3 基本数据类型
+    python中的变量不需要声明。每个变量在使用前都必须赋值，变量赋值以后该变量才会被创建。
+    在python中，变量就是变量，我们所说的“类型”是变量所指的内存中对象的类型。
+1. 赋值
+    a = 1
+2. 多个变量赋值
+    python允许我们同时为多个变量赋值，例如：
+        a = b = c = 1
+    以上实例，创建一个整型对象，值为1，以后向前赋值，三个变量被赋予相同的数值。
+    我们也可以为多个对象指定多个变量，例如：
+        a, b, c = 1, 2, 'runoob'
+    以上实例，两个整型对象1和2分配给变量a和b，字符串对象'runoob'分配给c
+3. 标准数据类型
+    python3中有六个标准的数据类型：
+        - Number    数字              不可变数据
+        - String    字符串             不可变数据
+        - Tuple     元组              不可变数据
+
+        - List      列表              可变数据
+        - Set       集合              可变数据
+        - Dictionary 字典             可变数据
+4. Number 数字
+    python3 支持int、float、bool、complex(复数)
+    在python3里，只有一种整数类型int，表示为长整型，没有python2中的Long。
+    像大多数语言一样，数值类型的赋值和计算都是很直观的。
+    内置的type()函数可以用来查询变量所指的对象类型。
+    #!/usr/bin/python
+    # -*- coding: UTF-8 -*-
+    a, b, c, d = 20, 5.5, True, 4 + 3j
+    print(type(a), type(b), type(c), type(d))
+    output==> <class 'int'><class 'float'><class 'bool'><class 'complex'>
+    此外还可以使用isinstance判断类型
+    >>> a = 111
+    >>> isinstance(a, int)
+    >>> True
+
+    isinstance和type的区别在于：
+        - isinstance()会认为子类是一种父类类型。
+        - type()不会认为子类是一种父类类型。
+    布尔类型的值为0和1，即 True为1，False为0
+
+    当我们指定一个值时，Number对象就会被创建：
+        var1 = 1
+        var2 = 2
+    我们也可以使用del语句删除一些对象引用：
+        del var
+        del var_a, var_b
+5. 数值运算
+    >>> 5 + 4
+    9
+    >>> 4.3 - 2
+    2.3
+    >>> 3 * 7
+    21
+    >>> 2 / 4   除法，得到一个浮点数
+    0.5
+    >>> 2 // 4  除法，得到一个整数
+    0
+    >>> 17 % 3  取余
+    2
+    >>> 2 ** 5  乘方
+    32
+    注意： 在混合计算时，python会把整型转换成浮点型。
+6. 数值类型实例
+    int             float               complex
+    10              0.0                 3.14j
+    100             15.20               45.j
+    -786            -21.9               9.322e-36j
+    080             32.3e+18            .876j
+    -0490           -90.                -.6545+0j
+    -0x260          -32.54e100          3e+26j
+    0x69            70.2E-12            4.53e-7j
+    python还支持复数，复数由实数部分和虚数部分构成，可以用a + bj，或者complex(a, b)表示，复数的实部a和虚部b都是浮点型
+7. String(字符串)
+    python中的字符串用单引号'或双引号"括起来，同时使用反斜杠\转义特殊字符。
+    字符串的截取语法格式如下：
+        变量[头下标:尾下标:步长]
+    索引从前： 0，  1，  2，  3，  4，  5
+    索引从后：-6，  -5， -4， -3， -2， -1
+
+    截取从前：   :    1    2    3    4    5    :
+    截取从后：   :    -5   -4   -3   -2   -1   :
+
+    注意：
+        - python字符串不能被改变，想一个索引位置赋值，会报错。
+        - 反斜杠可以用来转义，使用r可以让反斜杠不发生转义。
+        - 字符串可以用+运算符连接在一起，用*运算符重复。
+        - python中的字符串有两种索引方式，从左向右以0开始，从右向左以-1开始。
+        - python中的字符串不能改变。
+8. List(列表)
+    List(列表)是python中使用最频繁的数据类型。
+    列表可以完成大多数集合类型的数据结构实现。列表中元素的类型可以不相同，它支持数字，字符串甚至可以包含列表(所谓的嵌套)。
+    列表是写在方括号[]之间、用逗号分隔开的元素列表。
+    和字符串一样，列表同样可以被索引和截取，列表被截取后返回一个包含所需元素的新列表。
+    语法：
+        变量[头下标:尾下标]
+    索引值以0未开始值，-1为末尾的开始位置。
+        t = [  ' a ' ,  ' b ' ,  ' c ' ,  ' d ' ,  ' e '  ]
+     索引:      0        1        2        3        4
+               -5       -4       -3       -2       -1
+        >>>t[1:3]
+        ['b', 'c']
+        >>>t[:4]
+        ['a', 'b', 'c', 'd']
+        >>>t[3:]
+        ['d', 'e']
+        >>>t[:]
+        ['a'. 'b', 'c', 'd', 'e']
+    + 加号是列表连接符，* 星号是列表重复操作符，实例：
+        #!/usr/bin/python
+        # -*- coding: UTF-8 -*-
+        list = ['abcd', 796, 2.23, 'runoob', 70.2]
+        tinylist = [123, 'runoob']
+        pring(list)                 # 输出完整的列表
+        print(list[0])              # 输出列表第一个元素
+        print(list[1:3])            # 从第二个开始输出到第三个元素
+        print(list[2:])             # 输出从第三个元素开始的所有元素
+        print(tinylist * 2)         # 输出两次列表
+        print(list + tinylist)      # 链接列表
+    与python的字符串不一样的是，列表中的元素是可以改变的：
+    实例：
+        >>> a = [1, 2, 3, 4, 5, 6]
+        >>> a[0] = 9
+        >>> a[2:5] = [13, 14, 15]
+        >>> a
+        [9, 2, 13, 14, 15, 6]
+        >>> a[2:5] = []         # 将对应的元素值设置为[]
+        >>> a
+        [9, 2, 6]
+    List内置了很多方法，例如append()、pop()等等，后面会涉及到。。。
+9. 注意
+    - List写在方括号之间，元素用逗号隔开。
+    - 和字符串一样，list可以被索引和切片。
+    - List可以使用 + 操作符进行拼接。
+    - List中的元素是可以被改变的。
+    Python列表截取可以接收第三个参数，参数的作用是截取的步长，以下实例在索引1到4的位置并设置为步长为2(间隔一个位置)来截取字符串：
+                             0        1        2        3        4        5
+        >>> letters  =  [  ' r ' ,  ' u ' ,  ' n ' ,  ' o ' ,  ' o ' ,  ' b '  ]
+        >>> letters[1:4:2]
+        ['u', 'o']
+        >>> letters[1::2]
+        ['u', 'o', 'b']
+        >>> letters[1:4]
+        ['u', 'n', 'o']
+        >>> letters[::2]
+        ['r', 'n', 'o']
+        >>> letters[-1:-4:-2]
+        ['b', 'o']
+        >>> letters[-1::-2]
+        ['b', 'o', 'u']
+    如果第三个参数为负数，表示逆向读取
+    例如：
+        #!/usr/bin/python
+        # -*- coding: UTF-8 -*-
+        def reverseWords(input):
+            # 通过空格将字符串分割符，把各个单词分割为列表
+            inputWords = input.split(" ")
+            # 反转字符串
+            inputWords = inputWords[-1::-1]
+            # 重新组合字符串
+            output = ' '.join(inputWords)
+            return output
+        if __name__ == '__main__' :
+            input = 'I like runoob'
+            rw = reverseWords(input)
+            print(rw)
+        output==> runoob like I
+10. Tuple(元组)
+    元组(tuple)与列表类似，不同之处在于元组的元素不能修改。元组写在小括号()里，元素之间用逗号隔开。
+    元组中元素的类型也可以不同：
+    实例：
+        #!/usr/bin/python
+        # -*- coding: UTF-8 -*-
+        tuple = ('abc', 786, 2.23, 'runoob', 70.2)
+        tinytuple = (123, 'runoob')
+        print(tuple)
+        print(tuple[0])
+        print(tuple[1:3])
+        print(tuple[2:])
+        print(tuple * 2)
+        print(tuple + tinytuple)
+    元组与字符串类似，可以被索引且下标索引从0开始，-1为从末尾开始的位置。
+    其实，可以把字符串看做一种特殊的元组。
+    实例：
+        >>> tup = (1, 2, 3, 4, 5, 6, 7)
+        >>> print(tup[0])
+        1
+        >>> print(tup[1:5])
+        (2, 3, 4, 5)
+        >>> tup[0] = 11
+        Traceback (most recent call last):
+         File "<stdin>", line 1, in <module>
+        TypeError: 'tuple' object does not support item assignment
+        >>>
+    虽然tuple的元素不可以改变，但是它可以包含可变的对象，比如list列表。
+    构造包含0或1个元素的元组比较特殊，所以有一些额外的语法规则：
+        tup1 = ()       # 空元组
+        tup2 = (20,)    # 一个元素，需要在元素后添加逗号
+    string、list和tuple都属于sequence(序列)。
+11. 注意
+    - 与字符串一样，元组的元素不能修改。
+    - 元组也可以被索引和切片，方法一样。
+    - 注意构造包含0和1个元素的元组的特殊语法规则。
+    - 元组也可以使用 + 操作符进行拼接。
+12. Set(集合)
+    集合(set)是由一个或数个形态各异的大小整体组成的，构成集合的事物或对象称作元素或是成员。
+    基本功能是进行成员关系测试和删除重复元素。
+    可以使用 {} 或者 set()函数进行创建集合，注意：创建一个空元组，必须使用set()而不是 {} ，因为 {} 是用来创建空字典的。
+    创建格式：
+        parame = {value01, value02, ...}
+        或者
+        set(value)
+    实例：
+        #!/usr/bin/python
+        # -*- coding: UTF-8 -*-
+        sites = {'Google', 'Taobao', 'Runoob', 'Facebook', 'Zhihu', 'Baidu'}
+        print(sites)    # 输出集合，重复的元素被自动去掉
+        # 成员测试
+        if 'Runoob' in sites :
+            print('Runoob在集合中')
+        else :
+            print('Runoob不在集合中')
+        # set可以进行集合运算
+        a = set('abracadabra')
+        b = set('alacazam')
+        print(a)
+        print(a - b)    # a 和 b的差集
+        print(a | b)    # a 和 b的并集
+        print(a & b)    # a 和 b的交集
+        print(a ^ b)    # a 和 b中不同时存在的元素
+        output===>{'Runoob', 'Google', 'Zhihu', 'Taobao', 'Facebook', 'Baidu'}
+                  Runoob在集合中
+                  {'a', 'b', 'd', 'r', 'c'}
+                  {'b', 'd', 'r'}
+                  {'z', 'm', 'a', 'b', 'd', 'r', 'c', 'l'}
+                  {'c', 'a'}
+                  {'b', 'z', 'd', 'r', 'm', 'l'}
+13. Dictionary(字典)
+    字典(dictionary)是python中另一个非常有用的内置数据类型。
+    列表是有序的对象集合，字典是无序的对象集合。两者之间的区别在于：字典当中的元素是通过键来存取的，而不是通过偏移存取。
+    字典是一种映射类型，字典用 {} 标识，它是一个无须的键(key):值(value)的集合。
+    键(key)必须使用不可变类型。
+    在同一个字典中，键(key)必须是唯一的。
+    实例：
+        #!/usr/bin/python
+        # -*- coding: UTF-8 -*-
+        dict = {}
+        dict['one'] = "1 - 菜鸟教程"
+        dict[2] = "2 菜鸟工具"
+        tinydict = {'name':'runoob', 'code':1, 'site':'www.runoob.com'}
+        print(dict)
+        print(dict['one'])          # 输出键为'one'的值
+        print(dict[2])              # 输出键为 2 的值
+        print(tinydict)             # 输出完整的字典
+        print(tinydict.keys())      # 输出所有键
+        print(tinydict.values())    # 输出所有值
+        output===>{'one': '1 - 菜鸟教程', 2: '2 菜鸟工具'}
+                  1 - 菜鸟教程
+                  2 菜鸟工具
+                  {'name': 'runoob', 'code': 1, 'site': 'www.runoob.com'}
+                  dict_keys(['name', 'code', 'site'])
+                  dict_values(['runoob', 1, 'www.runoob.com'])
+14. 注意
+    - 字典是一种映射类型，它的元素是键值对。
+    - 字典的关键字必须为不可变类型，且不能重复。
+    - 创建空字典使用{}
+15. python数据类型转换
+    有时候，我们需要对数据内置的类型进行转换，数据类型的转换，我们只需要将数据类型作为函数名即可。
+    以下几个内置函数可以执行数据类型之间的转换。这些函数返回一个新的对象，表示转换后的值。
+        int(x, [, base])            # 将x转换为一个整数         base进制数，默认十进制
+        float(x)                    # 将x转换到一个浮点数
+        complex(real, [imag])       # 创建一个复数
+        str(x)                      # 将对象x转换为字符串
+        repr(x)                     # 将对象x转换为表达式字符串
+        eval(str)                   # 用来计算在字符串中的有效python表达式，并返回一个对象
+        tuple(s)                    # 将序列s转换为一个元组
+        list(s)                     # 将序列s转换为一个列表
+        set(s)                      # 转换为可变集合
+        dict(d)                     # 创建一个字典。d必须是一个(key, value)元组序列
+        frozenset(s)                # 转换为不可变集合
+        chr(x)                      # 将一个整数转换为一个字符
+        ord(x)                      # 将一个字符转换为它的整数值
+        hex(x)                      # 将一个整数转换为一个十六进制字符串
+        oct(x)                      # 讲一个整数转换为一个八进制字符串
+    例如：
+        #!/usr/bin/python
+        # -*- coding: UTF-8 -*-
+        if __name__ == '__main__':
+            # int(x, base)
+            print(int('12', 16))  # 12是十六进制数
+            print(int('10', 8))
+            print(int('1', 2))
+            # float(x)
+            print(float(45))
+            # complex(real, imag)
+            print(complex(2))
+            print(complex(1, 2))
+            # str(x)
+            print(str(19))
+            print(str(False))
+            print(str(True))
+            # repr(x)
+            print(repr(12))
+            print(repr('3s'))
+            # eval(str)
+            print(eval('3 * 7'))
+            print(eval('pow(2, 2)'))
+            print(eval('2 + 2'))
+            # tuple(s)
+            print(tuple('23465gsfwey'))
+            # list(s)
+            print(list('3ret54fer32tgre'))
+            # set(s)
+            print(set('3ffq43few'))
+            # dict(d)
+            print(dict({1: 2, 2: 3, 4: 2}))
+            # frozenset(s)
+            print(frozenset('fqewfq34tt455y34tf'))
+            # chr(x)
+            print(chr(0x30), chr(0x31), chr(0x61))      # 十六进制
+            print(chr(48), chr(49), chr(97))            # 十进制
+            # ord(x)        将一个字符转换为它的整数值
+            print(ord('s'))
+            # ord('fd')  会报错
+            # hex(x)
+            print(hex(3))       # 转换成十六进制
+            # oct(x)
+            print(oct(87))      # 转换为八进制
+            output==> 18
+                      8
+                      1
+                      45.0
+                      (2+0j)
+                      (1+2j)
+                      19
+                      False
+                      True
+                      12
+                      '3s'
+                      21
+                      4
+                      4
+                      ('2', '3', '4', '6', '5', 'g', 's', 'f', 'w', 'e', 'y')
+                      ['3', 'r', 'e', 't', '5', '4', 'f', 'e', 'r', '3', '2', 't', 'g', 'r', 'e']
+                      {'e', '4', '3', 'w', 'q', 'f'}
+                      {1: 2, 2: 3, 4: 2}
+                      frozenset({'5', 'e', '4', 'y', '3', 'w', 'q', 'f', 't'})
+                      0 1 a
+                      0 1 a
+                      115
+                      0x3
+                      0o127

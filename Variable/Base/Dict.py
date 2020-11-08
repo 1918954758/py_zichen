@@ -12,7 +12,7 @@ dict2 = dict()
 print(dict1, dict2)
 
 # 从字典中获取数据
-dict3 = {"lemon":"柠檬", "age":21, "hobby":"money"}
+dict3 = {"lemon": "柠檬", "age": 21, "hobby": "money"}
 name = dict3["lemon"]
 age = dict3["age"]
 hobby = dict3["hobby"]
@@ -26,6 +26,6 @@ print(dict3)
 # 删除字典成员
 del dict3["age"]
 print(dict3)  # 删除指定成员
-dict3.clear()   # 清空字典dict3
+dict3.clear()  # 清空字典dict3
 print(dict3)
-#del dict3   删除字典dict3
+# del dict3   删除字典dict3

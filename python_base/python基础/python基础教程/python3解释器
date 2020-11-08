@@ -1,0 +1,42 @@
+Python3解释器
+    Linux/Unix的系统上，一般默认的python版本为2.x，我们可以将python3.x安装在/usr/local/python3目录中。
+    安装完成后，我们可以将路径/usr/local/python3/bin添加到我们的Linux/Unix操作系统的环境变量中，这样我们就可以通过shell终端输入下面的命令来启动python3.
+    $ PATH=$PATH:/usr/local/python3/bin/python3         # 设置环境变量
+    $ python3 --version
+    Python 3.4.0
+    在window系统下我们可以通过以下命令来设置python的环境变量，假设我们的python安装在C:\Python34下：
+        set path=%path%;C"\python34
+1. 交互式编程
+    我们可以在命令提示符中输入"python"命令来启动python解释器：
+        $ python3
+    执行以上命令，出现如下窗口信息：
+        $ python3
+        Python 3.4.0 (default, Apr 11 2004, 13:05:11)
+        [GCC 4.8.2] on linux
+        Type "help", "copyright", "credits" or "license" for mor information.
+        >>>
+    在python提示符中输入以下语句，然后按回车键查看运行效果：
+        print("Hello, Python!")
+    以上命令执行结果如下：
+        Hello, Python!
+    当键入一个多行结构时，续行时必须的。我们可以看如下if语句：
+        >>> flag = True
+        >>> if flag :
+        ...     print("flag 条件为 True!")
+        ...
+        flag条件为True!
+2. 脚本式编程
+    将如下代码拷贝至hello.py文件中：
+        print("Hello, Python!")
+    通过以下命令执行该脚本：
+        python3 hello.py
+    输出结果为：
+        Hello, Python!
+    在Linux/Unix系统中，我们可以在脚本顶部添加以下命令让Python脚本可以像SHELL脚本一样可以直接执行：
+        #!/usr/bin/env python3
+    然后修改脚本权限，使其执行权限，命令如下：
+        $chmod +x hello.py
+    执行以下命令：
+        ./hello.py
+    输出结果为：
+        Hello, Python!
