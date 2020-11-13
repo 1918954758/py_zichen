@@ -1,0 +1,152 @@
+Python3模块
+    在前面的几个张杰中我们脚本上是用python解释器来编程，如果我们从python解释器退出去在进入，那么我们定义的所有的方法和变量就小时了。
+    为此python提供了一个办法，把这些定义存放在文件中，为一些脚本或者交互式的解释器实例使用，这个文件被称为模块。
+    模块是一个包含所有我们定义的函数和变量的文件，其后缀名是.py。模块可以被别的程序引入，以使用该模块中的函数等功能。这也是使用python标准库的方法。
+    下面是一个使用python标准库中的模块的例子：
+    实例：
+        #!/usr/bin/python
+        # -*- coding: UTF-8 -*-
+        # 文件名：using_sys.py
+        import sys
+        print('命令行参数如下：')
+        for i in sys.argv:
+            print(i)
+        print('\n\npython路径为：', sys.path, '\n')
+    执行结果如下所示：
+        $ python using_sys.py 参数1 参数2
+        命令行参数如下：
+        using_sys.py
+        参数1
+        参数2
+
+
+        python路径为：['', 'E:\\Python\\Python38\\python38.zip', 'E:\\Python\\Python38\\DLLs', 'E:\\Python\\Python38\\lib', 'E:\\Python\\Python38', 'E:\\Python\\Python38\\lib\\site-packages']
+    - import sys引入python标准库中的sys.py模块；这是引入某一模块的方法。
+    - sys.argv是一个包含命令行参数列表。
+    - sys.path包含一个python解释器自动查找所需模块的路径列表。
+1. import语句
+    想使用python源文件，只需在另一个源文件里执行import语句，语法如下：
+        import module1[, module2[, ...moduleN]]
+    当解释器遇到import语句，如果模块在当前的搜索路径就会被导入。
+    搜索路径是一个解释器会先进型搜索的所有目录的列表。如想要导入模块support，需要把命令放在脚本的顶端：
+    support.py文件代码：
+        #!/usr/bin/python
+        # Filename:support.py
+        def print_func(par):
+            print('Hello : ', par)
+            return
+    test.py文件代码：
+        #!/usr/bin/python
+        # Filename:test.py
+        # 导入模块
+        import support
+        # 现在可以调用模块里包含的函数了
+        support.print_func("Runoob")
+    以上实例输出结果：
+        $ python3 test.py
+        Hello : Runoob
+    一个模块只会被导入一次，不管我们执行多少次import。这样可以防止导入模块被一遍又一遍的执行。
+    当我们使用import语句的时候，python解释器是怎么样找到对应的文件的呢？
+    这就涉及到python的搜索路径，搜索路径是由一系列目录名组成的，python解释器就一次从这些目录中取寻找所引入的模块。
+    这看起来很像环境变量，事实上，也可以通过定义环境变量的方式来确定搜索路径。
+    搜索路径是在python编译或安装的时候确定的，安装新的库应该也会修改。搜索路径被存储在sys模块中的path变量，做一个简单的实验，在交互式解释器中，输入以下代码：
+        >>> import sys
+        >>> sys.path
+        ['', 'E:\\Python\\Python38\\python38.zip', 'E:\\Python\\Python38\\DLLs', 'E:\\Python\\Python38\\lib', 'E:\\Python\\Python38', 'E:\\Python\\Python38\\lib\\site-packages']
+    sys.path输出是一个列表，其中第一项是空串''，代表当前目录，亦即我们执行python解释器的目录。
+    因此若像我们一样在当前目录下存在与要引入模块同名的文件，就会把要引入的模块屏蔽掉。
+    了解了搜索路径概念，就可以在脚本中修改sys.path来引入一些不在搜索路径中的模块。
+    现在，在解释器的当前目录或者sys.path中的一个目录里面来创建一个fibo.py的文件，代码如下：
+        # fibonacci
+        def fib(n):
+            a, b = 0, 1
+            while b < n:
+                print(b, end=",")
+                a, b = b, a + b
+            print()
+        def fib2(n):
+            result = []
+            a, b = 0, 1
+            while b < n:
+                result.append(b)
+                a, b = b, a + b
+            return result
+    然后进入python解释器，使用下面的命令导入这个模块：
+        >>> import fibo
+    这样做并没有把直接定义在fibo中的函数名称写入到当前符号里面，只是把模块fibo的名字写到了哪里。
+    可以使用模块名称来访问函数：
+    实例：
+        >>> fibo.fib(1000)
+        1 1 2 3 5 8 13 21 34 55 89 144 233 377 610 987
+        >>> fibo.fib2(100)
+        [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
+        >>> fibo.__name__
+        'fibo'
+    如果我们打算经常使用一个函数，我们可以把它赋值给一个本地名称：
+        >>> fib = fibo.fib
+        >>> fib(500)
+        1 1 2 3 5 8 13 21 34 55 89 144 233 377
+2. from ... import语句
+    python的from语句从我们的模块中导入一个指定的部分到当前命名空间中，语法如下：
+        from modname import name1, name2, name3, ..., nameN
+3. from ... import *语句
+    from modulename import *
+4. 深入模块
+    模块除了方法定义，还可以包括可以执行的代码。这些代码一般用来初始化这个模块。这些代码只有在第一次被导入时才会被执行。
+    每个模块有各自独立的符号表，在模块内部为所有的函数当做全局符号表来使用。
+    所以，模块的坐着可以放心大胆的在模块内部使用这些全局变量，而不用担心把其他用户的全局变量搞混。
+    从另一个方面，当我们确实知道我们在做什么的话，我们也可以通过modname.itemname这样的表示法来访问模块内的函数。
+    模块是可以导入其他模块的。在一个模块的最前面使用import来导入一个模块，当然这只是一个管理，而不是强制的。被导入的模块的名称江北放入当前操作的模块的符号表中。
+    还有一种导入的方法，可以使用import直接把模块内(函数，变量)名称导入到当前操作模块。比如：
+        >>> from modname import name1, name2
+        >>> name1(xxx)
+        xxxxxx
+    这种导入的方法不会把被导入的模块的名称放在当前的字符表中。这还有一种方法，可以一次性的把模块中的所有(函数，变量)名称都导入到当前模块的字符表：
+        >>> from modname import *
+        >>> aaa(xxx)
+        xxxxx
+    这将把所有的名字都导入进来，但是那些由单一下划线(_)开头的名字不在此例。大多数情况，python程序员不使用这种方法，因为引入的其他来源的命名，恒可能覆盖了已有的定义。
+5. __name__属性
+    一个模块被另一个程序引用时，其主程序将运行。如果我们想在模块被引入时，模块中的某一程序块不执行，我们可以使用__name__属性来使该程序块尽在该模块自身运行时执行。
+        #!/usr/bin/python
+        # Filename: using_name.py
+        if __name__ == '__main__':
+            print('程序自身在运行')
+        else:
+            print('我来自另一个模块')
+    运行输出如下：
+        $ python using_name.py
+        程序自身在运行
+        $ python
+        >>> import using_name
+        我来自另一模块
+        >>>
+    说明：每一个模块都有一个__name__属性，当其值是'__main__'时，表明该模块自身在运行，否则是被引入。
+6. dir(函数)
+    内置的函数dir()可以找到模块内定义的所有名称。以一个字符串列表的形式返回：
+        >>> import math, sys
+        >>> dir(math)
+        ['__doc__', '__loader__', '__name__', '__package__', '__spec__', 'acos', 'acosh', 'asin', 'asinh', 'atan', 'atan2', 'atanh', 'ceil', 'comb', 'copysign', 'cos', 'cosh', 'degrees', 'dist', 'e', 'erf', 'erfc', 'exp', 'expm1', 'fabs', 'factorial', 'floor', 'fmod', 'frexp', 'fsum', 'gamma', 'gcd', 'hypot', 'inf', 'isclose', 'isfinite', 'isinf', 'isnan', 'isqrt', 'ldexp', 'lgamma', 'log', 'log10', 'log1p', 'log2', 'modf', 'nan', 'perm', 'pi', 'pow', 'prod', 'radians', 'remainder', 'sin', 'sinh', 'sqrt', 'tan', 'tanh', 'tau', 'trunc']
+        >>> dir(sys)
+        ['__breakpointhook__', '__displayhook__', '__doc__', '__excepthook__', '__interactivehook__', '__loader__', '__name__', '__package__', '__spec__', '__stderr__', '__stdin__', '__stdout__', '__unraisablehook__', '_base_executable', '_clear_type_cache', '_current_frames', '_debugmallocstats', '_enablelegacywindowsfsencoding', '_framework', '_getframe', '_git', '_home', '_xoptions', 'addaudithook', 'api_version', 'argv', 'audit', 'base_exec_prefix', 'base_prefix', 'breakpointhook', 'builtin_module_names', 'byteorder', 'call_tracing', 'callstats', 'copyright', 'displayhook', 'dllhandle', 'dont_write_bytecode', 'exc_info', 'excepthook', 'exec_prefix', 'executable', 'exit', 'flags', 'float_info', 'float_repr_style', 'get_asyncgen_hooks', 'get_coroutine_origin_tracking_depth', 'getallocatedblocks', 'getcheckinterval', 'getdefaultencoding', 'getfilesystemencodeerrors', 'getfilesystemencoding', 'getprofile', 'getrecursionlimit', 'getrefcount', 'getsizeof', 'getswitchinterval', 'gettrace', 'getwindowsversion', 'hash_info', 'hexversion', 'implementation', 'int_info', 'intern', 'is_finalizing', 'maxsize', 'maxunicode', 'meta_path', 'modules', 'path', 'path_hooks', 'path_importer_cache', 'platform', 'prefix', 'ps1', 'ps2', 'pycache_prefix', 'set_asyncgen_hooks', 'set_coroutine_origin_tracking_depth', 'setcheckinterval', 'setprofile', 'setrecursionlimit', 'setswitchinterval', 'settrace', 'stderr', 'stdin', 'stdout', 'thread_info', 'unraisablehook', 'version', 'version_info', 'warnoptions', 'winver']
+    如果没有给定参数，那么dir()函数会罗列出当前定义的所有名称：
+        >>> import math, sys
+        >>> dir()
+        ['__annotations__', '__builtins__', '__doc__', '__loader__', '__name__', '__package__', '__spec__', 'math', 'sys']
+7. 标准模块
+
+8. 包
+    导入包中特定的模块：
+        import sound.effects.echo
+    这将会导入子模块：sound.effects.echo。他必须使用全名去访问：
+        sound.effects.echo.echofilter(input, output, delay=0.7, atten=4)
+    还有一种导入子模块的方法：
+        from sound.effects import echo
+    这不需要写全名来访问:
+        echo.echofilter(input, output, delay=0.7, atten=4)
+    还有一种变化就是直接导入一个函数或者变量：
+        from sound.effects.echo import echofilter
+    这样就很简单了：
+        echofilter(input, output, delay=0.7, atten=4)
+9. 从一个包中导入 *
+
