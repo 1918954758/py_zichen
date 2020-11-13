@@ -1,0 +1,7 @@
+Pyrhon3条件控制
+    if condition_1 :
+        statement_block_1
+    elif condition_2 :
+        statement_block_2
+    else :
+        statement_3

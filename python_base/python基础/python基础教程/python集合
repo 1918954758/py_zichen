@@ -1,0 +1,92 @@
+Python3集合
+    集合(set)是一个无序的不重复元素序列。
+    可以使用{}或者set()来创建集合，注意：创建一个空集合必须用set()而不是{}，因为{}是用来创建一个空字典的。
+    创建格式：
+        parame = {value01, value02, ...}
+        或者
+        set(value)
+    实例：
+        >>> basket = {'apple', 'orange', 'apple', 'pear', 'orange', 'banana'}
+        >>> print(basket)               # 这里演示的是去重功能
+        {'orange', 'banana', 'pear', apple}
+        >>> 'orange' in basket          # 快速判断元素是否在集合内
+        True
+        >>> 'crabgrass' in basket
+        False
+        >>> # 下面展示两个集合键的运算。
+        ...
+        >>> a = set('abracadabra')
+        >>> b = set('alacazam')
+        >>> a
+        {'a', 'r', 'b', 'c', 'd'}
+        >>> a - b                       # 集合a中包含而集合b中不包含的元素
+        {'r', 'd', 'b'}
+        >>> a | b                       # 集合a或b包含的所有元素
+        {'a', 'c', 'r', 'd', 'b', 'm', 'z', 'l'}
+        >>> a & b                       # 集合a和b中都包含了的元素
+        {'a', 'b'}
+        >>> a ^ b                       # 不同时包含于a和b的元素
+        {'r', 'd', 'b', 'm', 'z', 'l'}
+        类似列表推导式，同样集合支持集合推导式(Set comprehension):
+        实例：
+            >>> a = {x for x in 'abracadabra' if x not in 'abc'}
+            >>> a
+            {'r', 'd'}
+一、集合的基本操作
+    1. 添加元素
+        语法格式如下：
+            s.add(x)            x是元素，字符串等
+            s.update(x)         x是元素，可以使列表、元组、字典等，x可以是多个元素，用逗号隔开
+    2. 移除元素
+        语法格式如下：
+            s.remove(x)         如果x元素不存在，则报错
+            s.discard(x)        如果x元素不存在，则不会报错
+    3. 计算集合个数
+        语法格式如下：
+            len(s)
+    4.清空集合
+        语法格式如下：
+            s.clear()
+    5. 判断元素是否在集合中存在
+        语法格式如下：
+            x in s
+二、集合内置方法完整列表
+    add()                           为集合添加元素
+    clear()                         清空集合
+    copy()                          拷贝一个集合
+    difference()                    返回一个集合的差集
+    discard()                       移除集合中的一个元素，该元素在集合中存在与否都不会报错
+    intersection()                  返回集合的交集
+    intersection_update()           返回集合的交集
+    isdisjoint()                    判断两个集合是否包含相同的元素，如果没有，则返回True，否则返回False
+    issubset()                      判断指定集合是否为该方法参数集合的子集
+    issuperset()                    判断该方法的桉树集合是否为指定集合的子集
+    pop()                           随机移除元素
+    remove()                        移除指定元素
+    symmetric_difference()          返回两个集合中不重复的元素集合
+    symmetric_difference_update()   移除当前集合中在另外一个指定集合相同的元素，并将另外一个指定集合中不同的元素插入到当前集合中
+    union()                         返回两个集合的并集
+    update()                        向集合添加元素
+
+注意：
+    1. s.update("字符串") 和 s.update({"字符串"})
+        s.update("字符串")         将字符串拆分单个字符后，然后再一个个添加到集合中，有重复的会忽略
+        s.update({"字符串"})       将字符串添加到集合中，有重复的会忽略
+    2. set()中参数注意事项
+        a. 创建含有一个元素的集合
+            >>> my_set = set(("apple", ))
+            >>> my_set
+            {"apple"}
+        b. 创建含有多个元素的集合
+            >>> my_set = set(("apple", "pear", "banana"))
+            >>> my_set
+            {"apple", "pear", "banana"}
+        c. 如无必要，不要写成如下形式
+            >>> my_set = ("apple")
+            >>> my_set
+            {"l", "e", "p", "a"}
+            >>> my_set1 = set(("apple"))
+            >>> my_set
+            {"p", "a", "l", "e"}
+            >>> my_set2 = set("apple", "pear")
+            ...如此写法会报错...

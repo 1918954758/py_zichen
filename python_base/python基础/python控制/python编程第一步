@@ -1,0 +1,37 @@
+Python3编程第一步
+    在前面的教程中我们已经学习了一些python3的基本语法知识，下面我们尝试来写一个斐波那契数列。
+    实例1：
+        #!/usr/bin/python
+        # -*- coding: UTF-8 -*-
+        # Fibonacci series：斐波那契数列
+        # 两个元素的综合确定了下一个数
+        a, b = 0, 1
+        while b < 10:
+            print(b)
+            a, b = b, a + b
+    实例2：
+        #!/usr/bin/python
+        # -*- coding: UTF-8 -*-
+        def fab(n):
+            if n < 1:
+                print("输入错误")
+                return -1
+            if n == 1 or n == 2:
+                return 1
+            else :
+                return fab(n-1) + fab(n+1)
+        if __name__ == '__main__' :
+            result = def(10)
+            print(result)
+
+1. end关键字
+    关键字end可以用于将结果输出到同一行，或者在输出的末尾添加不同的字符，实例如下：
+    实例：
+        #!/usr/bin/python
+        # -*- coding: UTF-8 -*-
+        # Fibonacci series：斐波那契数列
+        # 两个元素的综合确定了下一个数
+        a, b = 0, 1
+        while b < 10:
+            print(b, end=",")
+            a, b = b, a + b

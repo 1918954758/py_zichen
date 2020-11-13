@@ -1,0 +1,147 @@
+Python中yield浅析
+    我们知道，带有yield的函数在python中被称之为generator(生成器)，那么啥叫generator?
+    我们先抛开generator，以一个常见的编程题目来展示yield的概念。
+1. 如何生成斐波那契数列
+    斐波那契数列(Fibonacci)数列是一个非常简单的递归数列，初第一个和第二个数外，任意一个数都可由前两个数相加得到。用计算机程序输出斐波那契数列的前N个数是一个非常简单的问题，许多初学者都可以轻易写出如下函数：
+    清单1. 简单输出斐波那契数列前N个数
+        实例：
+            #!/usr/bin/python
+            # -*- coding: UTF-8 -*-
+            # 以下函数在fab中直接打印，会导致代码复用性较差
+            from pip._vendor.msgpack.fallback import xrange
+            def fab(max):
+                n, a, b = 0, 0, 1
+                while n < max:
+                    print(b)
+                    a, b = b, a + b
+                    n += 1
+            if __name__ == '__main__':
+                fab(5)
+    清单2.
+            # 使函数返回一个list，提高代码复用性，但是这样会随着参数max的增大运行中占用的内存会增大，也不是最优选择
+            def fab1(max):
+                n, a, b = 0, 0, 1
+                L = []
+                while n < max:
+                    L.append(b)
+                    a, b = b, a + b
+                    n += 1
+                return L
+            if __name__ == '__main__':
+                fab1(5)
+    清单3.
+            # 要想解决内存占用大的问题，我们需要使用iterable对象来迭代
+            # 这样在每次迭代中返回下一个数值，内存空间占用很小。因为xrange不返回list，而是返回iterable对象。
+            def fab2(max):
+                n, a, b = 0, 0, 1
+                for i in xrange(1000):
+                    return i
+            if __name__ == '__main__':
+                fab2(5)
+    清单4.
+            # 利用iterable我们把fab函数改写为一个支持iterable的class，以下是滴三个版本的fab：
+            class Fab(object):
+                def __init__(self, max):
+                    self.max = max
+                    self.n, self.a, self.b = 0, 0, 1
+
+                def __iter__(self):
+                    return self
+
+                def __next__(self):  # python3中使用 __next__(self)  # python2中使用 next(self)
+                    if self.n < self.max:
+                        r = self.b
+                        self.a, self.b = self.b, self.a + self.b
+                        self.n += 1
+                        return r
+                    else:
+                        raise StopIteration()
+            if __name__ == '__main__':
+                for n in Fab(5):
+                    print(n)
+    清单5.
+            # 如上似乎可以满足要求了，但是代码并不简洁
+            # 要想也使代简洁，同时又要获得iterable的效果那么我们就可以使用yield了
+            def Fab1(max):
+                n, a, b = 0, 0, 1
+                while n < max:
+                    yield b  # 使用yield
+                    # print
+                    a, b = b, a + b
+                    n += 1
+            if __name__ == '__main__':
+                for n in Fab1(5):
+                    print(n)
+    简单的讲，yield的作用就是吧一个函数变成一个generator，带有yield的函数不在是一个普通的函数，python解释器会将其视为一个generator，调用fab(5)不会执行fab函数，而是返回一个iterable对象！在for循环执行时，每次循环都会执行fab函数内部的代码，执行到yield b时，fab函数就返回一个迭代值，下次迭代时，代码从yield b的下一条语句继续执行，而函数的本地变量看起来和上次中断执行前的完全一样的，于是函数继续执行，直到再次遇到yield。
+    也可以手动调用fab(5)的next()方法(因为fab(5)是一个generator对象，该对象具有next()方法)，这样我们就可以更清楚地看到fab的执行流程：
+    执行流程：
+        >>> f = fab(5)
+        >>> f.next()
+        1
+        >>> f.next()
+        1
+        >>> f.next()
+        2
+        >>> f.next()
+        3
+        >>> f.next()
+        5
+        >>> f.next()
+        Traceback (most recent call last):
+           File "<stdin>", line 1, in <module>
+        StopIteration
+    当函数执行结束时，generator自动抛出StopIteration异常，表示迭代完成。在for循环里，无需处理StopIteration异常，循环会正常结束。
+    ==> 我们可以得出以下结论：
+        一个带有yield的函数就是一个generator，它和普通函数不同，生成一个generator看起来像函数调用，但不会执行任何函数代码，直到对其调用next()(在for循环里会自动调用next())才开始执行。虽然执行流程仍按函数额流程执行，但没执行到一个yield语句就会中断，并返回一个迭代值，下次执行时从yield的下一个语句继续执行。看起来就好像一个函数在正常执行的过程中被yield d中断了数次，每次中断都会通过yield返回当前的迭代值。
+        yield的好处是显而易见的，把一个函数写为一个generator就会得了迭代能力，比起用类的实例保存状态来计算下一个next()的值，不仅仅代码简洁，而且执行流程异常清晰。
+        如何判断一个函数是否是一个特殊的generator函数？可以用isgeneratorfunction判断：
+    清单7. 使用isgeneratorfunction判断
+            >>> from inspect import isgeneratorfunction
+            >>> isgeneratorfunction(fab)
+            True
+        注意区分fab和fab(5)，fab是一个generator function，而fab(5)是调用fab返回的一个generator，好比类的定义和类的实例的区别：
+    清单8. 类的定义和类的实例
+            >>> import types
+            >>> isinstance(fab, types.GeneratorType)
+            False
+            >>> isinstance(fab(5), types.GeneratorType)
+            True
+            fab是无法迭代的，而fab(5)是可迭代的：
+                >>> from collections import Iterable
+                >>> isinstance(fab, Iterable)
+                False
+                >>> isinstance(fab(5), Iterable)
+                True
+            每次调用fab函数都会生成一个新的generator实例，各实例互不影响：
+                >>> f1 = fab(3)
+                >>> f2 = fab(5)
+                >>> print 'f1:', f1.next()
+                f1: 1
+                >>> print 'f2:', f2.next()
+                f2: 1
+                >>> print 'f1:', f1.next()
+                f1: 1
+                >>> print 'f2:', f2.next()
+                f2: 1
+                >>> print 'f1:', f1.next()
+                f1: 2
+                >>> print 'f2:', f2.next()
+                f2: 2
+                >>> print 'f2:', f2.next()
+                f2: 3
+                >>> print 'f2:', f2.next()
+                f2: 5
+return的作用
+    在一个generator function中，如果没有return，则默认执行至函数完毕，如果在执行过程中return，则直接抛出StopIteration终止迭代。
+    另一个例子
+        另一个yield的例子来源于文件读取。如果直接对文件对象调用read()方法，会导致不可预测的内存占用。好的方法是利用固定长度的缓冲区来不断读取文件内容。通过yield，我们不在需要编写读文件的迭代类，就可以轻松实现文件读取：
+        清单9. 另一个yield的例子
+            def read_file(fpath):
+                BLOCK_SIZE = 1024
+                with open(fpath, 'rb') as f:
+                while True:
+                    block = f.read(BLOCK_SIZE)
+                    if block:
+                        yield block
+                    else:
+                        return
