@@ -1,0 +1,256 @@
+Python3数据结构
+    本小结主要是结合前面学习的知识点来介绍python数据结构。
+1. 列表
+    python中列表是可变的，这是它区别于字符串和元组的最重要的特点，一句话概括，即列表可以修改，而字符串和元组不能。
+    以下是python中的列表方法：
+        list.append(x)  把一个元素添加到列表的结尾，相当于 a[len(a):] = [x]
+        list.extend(L)  通过添加指定列表的所有元素来扩充列表，相当于 a[len(a):] = [L]
+        list.insert(i, x)   在指定位置插入一个元素。第一个参数是索引，而a.insert(len(a), x)相当于a.append(x)
+        list.remove(x)  删除列表中值为x的第一个元素。如果没有这样的元素，就会返回一个错误
+        list.pop([i])   从列表的指定位置移除元素，并将其返回。如果没有指定索引，a.pop()返回最后一个元素。元素即从列表中被移除。方法中的方括号表示该参数是可选的，而不是要求我们输入一个方括号
+        list.clear()    清空列表
+        del list        删除列表
+        list.index(x)   返回列表中第一个值为x的元素索引。如果没有匹配的元素就会返回一个错误
+        list.count(x)   返回x在列表中出现的次数
+        list.sort()     对列表中的元素进行排序
+        list.reverse()  倒排列表中的元素
+        list.copy()     返回列表的浅复制，等于 a[:]
+    演示方法：
+        >>> a = [66.25, 333, 333, 1, 1234.5]
+        >>> print(a.count(333), a.count(66.25), a.count('x'))
+        2 1 0
+        >>> a.insert(2, -1)
+        >>> a.append(333)
+        >>> a
+        [66.25, 333, -1, 333, 1, 1234.5, 333]
+        >>> a.index(333)
+        1
+        >>> a.remove(333)
+        >>> a
+        [66.25, -1, 333, 1, 1234.5, 333]
+        >>> a.reverse()
+        >>> a
+        [333, 1234.5, 1, 333, -1, 66.25]
+        >>>a.sort()
+        [-1, 1, 66.25, 333, 333, 1234.5]
+2. 将列表当做堆栈使用
+    列表方法使得列表可以很方便的作为一个堆栈来使用，堆栈作为特定的数据结构，最先进入的元素最后一个被释放(后进先出)。用append()方法可以把一个元素添加到堆栈顶。用不指定索引的pop()方法可以把一个元素从堆栈顶释放出来。例如：
+    实例：
+        >>> stack = [3, 4, 5]
+        >>> stack.append(6)
+        >>> stack.append(7)
+        >>> stack
+        [3, 4, 5, 6, 7]
+        >>> stack.pop()
+        7
+        >>> stack
+        [3, 4, 5, 6]
+        >>> stack.pop()
+        6
+        >>> stack.pop()
+        5
+        >>> stack
+        [3, 4]
+3. 将列表当做队列使用
+    也可以把列表当做队列用，只是在队列里第一加入的元素，第一个取出来；但是拿列表用做这样的目的效率不高。在列表的最后添加或者弹出元素速度快，然而在列表里插入或者从头不弹出速度却不快(因为所有其他的元素都得一个一个地移动)。
+    >>> from collections import deque
+    >>> queue = deque(["Eric", "John", "Michael"])
+    >>> queue.append("Terry")   # Terry arrives
+    >>> queue.append("Graham")  # Graham arrives
+    >>> queue.popleft()         # The first to arrive now leaves
+    'Eric'
+    >>> queue.popleft()
+    'John'
+    >>> queue
+    deque(['Michael', 'Terry', 'Graham'])
+4. 列表推导式
+    列表推导式提供了从序列穿件列表的简单途径。通常应用程序将一些操作应用于某个序列的每个元素，用其获得的结果作为生成新列表的元素，或者根据确定的判定条件创建子序列。
+    每个列表推导式都在for之后跟一个表达式，然后有零到多个for或if子句。返回结果是一个根据表达从其后的for和if这里我们将列表中每个数值乘三，获得一个新列表：
+        >>> vec = [2, 4, 6]
+        >>> [3 * x for x in vec]
+        [6, 12, 18]
+    使返回的列表进行组装：
+        >>> vec = [2, 4, 6]
+        >>> [[x, x ** 2] for x in vec]
+        [[2, 4], [4, 16], [6, 36]]
+    增加过滤器if：
+        >>> vec = [2, 4, 6]
+        >>> [x for x vec if x != 4]
+        [2, 6]
+    对序列里的元素逐个调用某方法：
+        >>> freshfruit = ['banana', 'loganberry', 'passion fruit']
+        >>> [len(weapon) for weapon in freshfruit]
+        [6, 10, 13]
+    多循环：
+        >>> vec1 = [2, 4, 6]
+        >>> vec2 = [4, 3, -9]
+        >>> [x * y for x in vec1 for y in vec2]
+        [8, 6, -18, 16, 12, -36, 24, 18, -54]
+        >>> [x + y for x in vec1 for y in vec2]
+        [6, 5, -7, 8, 7, -5, 10, 9, -3]
+        >>> [vec1[i] * vec2[i] for i in range(len(vec1))]
+        [8, 12, -54]
+    使用复杂表达式或嵌套函数：
+        >>> [str(round(355/113, i)) for i in range(1, 6)]
+        ['3.1', '3.14', '3.142', '3.1416', '3.14159']
+5. 嵌套列表解析
+    python的列表还可以嵌套。
+    以下实例展示了3X4的矩阵列表：
+        >>> matrix = [
+        ...    [1, 2, 3, 4],
+        ...    [5, 6, 7, 8],
+        ...    [9, 10, 11, 12],
+        ...]
+    以下实例将3X4的矩阵列表转换为4X3列表：
+        >>> [[row[i] for row in matrix] for i in range(4)]
+        [[1, 5, 9], [2, 6, 10], [3, 7, 11], [4, 8, 12]]
+    以下实例也可以使用以下方法来实现：
+        >>> transposed = []
+        >>> for i in range(4):
+        ...     transposed.append([row[i] for row in matrix])
+        ...
+        >>>transposed
+        [[1, 5, 9], [2, 6, 10], [3, 7, 11], [4, 8, 12]]
+    另一种实现方法：
+        >>> transposed = []
+        >>> for i in range(4)
+        ...     # the following 3 lines implement the nested listcomp
+        ...     transposed_row = []
+        ...     for row in matrix:
+        ...         transposed_row.append([row[i]])
+        ...     transposed.append(transposed_row)
+        ...
+        >>> transposed
+        [[1, 5, 9], [2, 6, 10], [3, 7, 11], [4, 8, 12]]
+6. del语句
+    使用del语句可以从一个列表中依索引而不是值来删除一个元素。这与使用pop()返回一个值不同。可以用del语句从列表中删除一个切割，或清空整个列表(我们以前介绍的方法是给该切割一个空列表)。例如：
+        >>> a = [-1, 1, 66.25, 333, 333, 1234.5]
+        >>> del a[0]
+        >>> a
+        [1, 66.25, 333, 333, 1234.5]
+        >>> del a[2:4]
+        [1, 66.25, 1234.5]
+        >>> del a[:]
+        >>> a
+        []
+    也可以直接使用del清空列表：
+        >>> a = [1, 66.25, 333, 333, 1234.5]
+        >>> del a
+        >>> a
+        []
+7. 元组和序列
+    元组由若干逗号分隔的值组成，例如：
+        >>> t = 12345, 54321, 'hello!'
+        >>> t[0]
+        12345
+        >>> t
+        (12345, 54321, 'hello!')
+        >>> # Tuples may be nested:
+        ... u = t, (1, 2, 3, 4, 5)
+        >>> u
+        ((12345, 54321, 'hello!'), (1, 2, 3, 4, 5))
+    向我们料想的一样，元组输出总是有括号的，但是在输入的时候可以有也可以没有，不过括号通常是必须的。
+8. 集合
+    集合是一个无序的，不重复的元素集，基本功能包括关系测试和消除重复元素。
+    可以用大括号({})创建集合。注意：如果要创建一个空集合，我们必须要用set()而不是用{}；后者是用来创建空字典的。
+    简单的实例介绍：
+        >>> basket = {'apple', 'orange', 'apple', 'pear', 'orange', 'banana'}
+        >>> print(basket)                       # delete repeat
+        {'orange', 'banana', 'pear', 'apple'}
+        >>> 'orange' in basket                  # 检查成员
+        True
+        >>> 'crabgrass' in basket
+        False
+
+        >>> # 以下演示两个集合的操作
+
+        >>> a = set('abracadabra')
+        >>> b = set('alacazam')
+        >>> a                                   # a中唯一的元素打印出来
+        {'a', 'r', 'b', 'c', 'd'}
+        >>> a - b                               # a 中包含，b 中不包含
+        {'r', 'd', 'b'}
+        >>> a | b                               # a 和 b 的并集
+        {'a', 'c', 'r', 'd', 'b', 'm', 'z', 'l'}
+        >>> a & b                               # a 和 b 的交集
+        {'a', 'c'}
+        >>> a ^ b                               # 同 ^(a&b)  在 a 或 b 中，但不同时在 a 和 b 中
+    集合也支持推导式：
+        >>> a = [x for x in 'abracadabra' if x not in 'abc']
+        >>> a
+        {'r', 'd'}
+9. 字典
+    另一个非常有用的python内建数据类型是字典。
+    序列是以连续的整数为索引，榆次不同的是，字典以关键字为索引，关键字可以是任意不可变类型，通常用字符串或数值。
+    理解字典的最佳方式是吧它看做一个无序的键=>值对集合。在同一个字典之内，关键字必须是互不相同的。
+    一对大括号创建一个空字典： {}
+    以下例子方便理解字典：
+        >>> tel = {'jack': 4098, 'sape':4139}
+        >>> tel['guido'] = 4127
+        >>> tel
+        {'jack': 4098, 'sape':4139, 'guido': 4127}
+        >>> tel['jack']
+        4098
+        >>> del tel['sape']
+        >>> tel['irv'] = 4127
+        >>> tel
+        {'jack': 4098, 'irv':4127, 'guido': 4127}
+        >>> list(tel.keys())
+        ['irv', 'guido', 'jack']
+        >>> sorted(tel.keys())
+        ['guido', 'irv', 'jack']
+        >>> 'guido' in tel
+        True
+        >>> 'jack' not in tel
+        False
+    构造函数dict()直接从键值对元组列表中构建字典。如果有固定的模式，列表推导式指定特定的键值对：
+        >>> dict([('sape': 4139), ('guido':4127), ('jack':4098)])
+        {'sape':4139, 'jack':4098, 'guido':4127}
+    此外，字典推导可以用来创建任意键和值得表达式字典：
+        >>> {x: x ** 2 for x in (2, 4, 6)}
+        {2:4, 4:16, 6:36}
+    如果关键字只是简单的字符串，使用关键字参数指定键值对有时候更方便：
+        >>> dict(sape=4139, guido=4127, jack=4098)
+        {'sape':4139, 'jack':4098, 'guido':4127}
+10. 遍历技巧
+    在字典中遍历时，关键字和对应的值可以使用items()方法同时解读出来：
+        >>> knights = {'gallahad':'the pure, 'robin':'the brave}
+        >>> for k, v in knights.items():
+        ...     print(k, v)
+        ...
+        gallahad the pure
+        robin the brave
+    在序列中遍历时，索引位置和对应值可以使用enumerate()函数同时得到：
+        >>> for i, v in enumerate(['tic', 'tac', 'toe']):
+        ...     print(i, v)
+        ...
+        0 tic
+        1 tac
+        2 toe
+    同时遍历两个或更多的序列，可以使用zip()组合：
+        >>> questions = ['name', 'quest', 'favorite color']
+        >>> answers = ['lancelot', 'the holy grail', 'blue']
+        >>> for q, a in zip(questions, answers):
+        ...     print('What is your {0}? It is {1}.'.format(q, a))
+        ...
+        What is you name? It is lancelot.
+        What is you quest? It is the holy grail.
+        What is you favorite? It is blue.
+    要反向遍历一个序列，首先指定这个序列，然后调用reversed()函数：
+        >>> for i in reversed(range(1, 10, 2)):
+        ...     print(i)
+        ...
+        9
+        7
+        5
+        3
+        1
+    要按顺序遍历一个序列，使用sorted()函数返回一个已排序的序列，并不修改原值：
+        >>> basket = ['apple', 'orange', 'apple', 'pear', 'orange', 'banana']
+        >>> for i in sorted(set(basket)):
+        ...     print(i)
+        ...
+        apple
+        banana
+        orange
+        pear
