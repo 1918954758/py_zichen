@@ -1,0 +1,81 @@
+Python3 命名空间和作用域
+
+1. 命名空间
+    官方说明：
+        A namespaces is a mapping from names to objects. Most namespaces are currently implemented as Python dictionaries.
+    命名空间是从名称到对象的映射，大部分命名空间都是通过Python字典来实现的。
+    命名空间提供了在项目中避免名字冲突的一种方法。各个命名空间是独立的，没有任何关系的，所以一个命名空间中不能有重复，但不同的命名空间是可以重名而没有任何影响。
+    一般有三种命名空间：
+        - 内置名称(built-in names)，Python语言内置的名称，比如函数名abs、char和异常名称BaseException、Exception等等。
+        - 全局名称(global names)，模块中定义的名称，记录了模块的变量，包括函数、类、其它导入的模块、模块级的变量和常量。
+        - 局部变量(local names)，函数中定义的名称，记录了函数的变量，包括函数的参数和局部定义的变量。(类中定义的也是)
+
+    命名空间查找顺序：
+        假设我们要是用变量 runoob，则Python的查找顺序为： 局部的命名空间 -> 全局命名空间 -> 内置命名空间
+        如果找不到变量 runoob，它将放弃查找并引发一个NameError异常：
+            NameError: name 'runoob' is not defined。
+    命名空间的生命周期：
+        命名空间的生命周期取决于对象的作用域，如果对象执行完成，则该命名空间的生命周期就结束。
+        因此，我们无法才能够外部命名空间访问内部命名空间的对象。
+        实例：
+            # var1 是全局名称
+            var1 = 5
+            def some_func():
+                # var2 是局部名称
+                var2 = 6
+                def some_inner_func():
+                    # var3 是内嵌的局部名称
+                    var3
+2. global和nonlocal关键字
+    当内部作用域想修改外部作用域的变量时，就要用到global和nonlocal关键字了。
+    实例：
+        #!/usr/bin/python
+        num = 1
+        def fun1():
+            global num # 修改全局变量需要用到global关键字
+            print(num)
+            num = 123
+            print(num)
+        fun1()
+        print(num)
+    如果要修改嵌套作用域(enclosing作用域，外层全局作用域)中的变量则需要nonlocal关键字了，如下实例：
+    实例：
+        #!/usr/bin/python
+        def outer():
+            num = 10
+            def inner():
+                nonlocal num   # 修改外部函数非全局变量需要使用nonlocal关键字
+                num = 100
+                print(num)
+            inner()
+            print(num)
+        outer()
+    另外一种特殊情况，假设下面这段代码被运行：
+        #!/usr/bin/python
+        a = 10
+        def test():
+            a = a + 1
+            print(a)
+        test()
+        output==>
+            报错
+    错误信息为局部不作用域引用错误，因为test函数中的a使用的是局部，未定义无法修改全局变量a：
+        修改1：
+            #!/usr/bin/python
+            a = 10
+            def test():
+                global a
+                a = a + 1
+                print(a)
+            test()
+            output==>
+                11
+        修改2：
+            #!/usr/bin/python
+            a = 10
+            def test(a):
+                a = a + 1
+                print(a)
+            test(a)
+            output==>
+                11
