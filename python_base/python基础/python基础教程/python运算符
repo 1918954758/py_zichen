@@ -23,6 +23,7 @@ Python3运算符
     and     x and y     布尔"与" -如果x为True，x and y返回y的值，否则它返回x的计算值      a and y 返回 20
     or      x or y      布尔"或" -如果x为True，x or y返回x的值，否则返回y的计算值          a or y 返回10
     not     not x       布尔"非" -如果x为True，not x返回False，如果x为False，它返回True   not(a and b) 返回False
+    优先级   not > and > or
 6. 成员运算符
     in          如果在指定的序列中找到值返回True，否则返回False
     not in      如果在指定的序列中没有找到值返回True，否则返回False
