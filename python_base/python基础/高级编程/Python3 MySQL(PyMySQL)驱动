@@ -1,0 +1,129 @@
+Python3 MySQL 数据库连接 - PyMySQL驱动
+1. 什么是PyMySQL?
+    PyMySQL是在Python3.x版本中用于连接MySQL服务器的一个库，Python2中则使用mysqldb。
+    PyMySQL遵循Python数据库API v2.0规范，并包含了pure-Python MySQL客户端库。
+2. 数据库连接
+    连接数据库前，请先确认以下事项：
+        - 您已经创建了数据库TESTDB
+        - 在TESTDB数据库中您已经创建了表EMPLOYEE
+        - EMPLOYEE表字段为FIRST_NAME,LAST_NAME,AGE,SEX和INCOME。
+        - 连接数据库TESTDB使用的用户名为"root"，密码为"root"，我们也可以自己设定或者直接使用root用户名及其密码，Mysql数据库用户授权请使用Grant命令。
+        - 在我们的机子上已经安装了Python MySQLdb模块。
+    实例：
+    #!/usr/bin/python
+    # -*- coding: UTF-8 -*-
+    import pymysql
+    # 打开数据库连接
+    db = pymysql.connect("localhose", "root", "root", "testdb")
+    # 使用cursor()方法创建一个游标对象cursor
+    cursor = db.cursor()
+    # 使用execute()方法执行SQL查询
+    cursor.execute("select version()")
+    # 使用fetchone() 方法获取单条数据
+    data = cursor.fetchone()
+    print("database version: %s: ", $ data)
+    # 关闭数据库
+    db.close()
+    output==>
+        ('8.0.20',)
+3. 创建数据库表
+    如果数据库连接存在我们可以使用execute()方法来为数据库创建表，如下所示创建表EMPLOYEE:
+    实例：
+        #!/usr/bin/python
+        import pymysql
+        # 打开数据库连接
+        db = pymysql.connect('localhost', 'root', 'root', 'testdb')
+        # 使用cursor() 方法创建一个游标对象cursor
+        cursor = db.cursor()
+        # 使用execute()方法执行SQL，如果表存在则删除
+        cursor.execute("drop table if exists employee")
+        # 使用预处理语句创建表
+        sql = """create table employee (first_name char(20) not null, last_name (20), age int, sex char(1), income float)"""
+        cursor.execute(sql)
+        # 关闭数据库连接
+        db.close()
+
+        查看数据表：
+            cursor.execute("show tables")
+            for table in cursor:
+                print(table)
+            output==>
+                ('employee',)
+4. 数据库插入操作
+    #!/usr/bin/python
+    # -*- coding: UTF-8 -*-
+    import pymysql
+    # 打开数据库连接
+    db = pymysql.connect('localhost', 'root', 'root', 'testdb')
+    # 获取游标
+    cursor = db.cursor()
+    # 预处理sql
+    sql = """insert into employee (first_name, last_name, age, sex, income) values ('Mac', 'Mohan', 20, 'M',2000)"""
+    try:
+        # 执行sql
+        cursor.execute(sql)
+        # 提交到数据库
+        db.commit()
+    except:
+        # 如果发生异常则回滚
+        db.rollback()
+    # 关闭数据库连接
+    db.close()
+5. 数据库查询操作
+    #!/usr/bin/python
+    # -*- coding: UTF-8 -*-
+
+    import pymysql
+
+    db = pymysql.connect('localhost', 'root', 'root', 'testdb')
+    cursor = db.cursor()
+    sql = """select * from employee where income > %s"""
+    na = (1000,)
+
+    if __name__ == '__main__':
+        try:
+            cursor.execute(sql, na)
+            results = cursor.fetchall()
+            for row in results:
+                fname = row[0]
+                lname = row[1]
+                age = row[2]
+                sex = row[3]
+                income = row[4]
+                print("fname=%s, lname=%s, age=%s, sex=%s, income=%s" % (fname, lname, age, sex, income))
+        except:
+            print('Error: unable to fetch data')
+        db.close()
+    output==>
+        fname=Mac, lname=Mohan, age=20, sex=M, income=2000.0
+6. 数据库更新操作
+    sql = "update employee set age = age + 1 where sex = '%c'" % ('M')
+7. 数据库删除操作
+    sql = "delete from employee where age > %s" % (20)
+8. 执行事务
+    事务机制可以确保数据一致性
+    事务应该具有4个属性：原子性、一致性、隔离性、持久性。这四个属性通常称为ACID特性。
+        - 原子性(atomicity)    一个事务是一个不可分割的工作单位，事务中包括的诸操作要么都做，要么都不做。
+        - 一致性(consistency)  事务必须是使数据库从一个一致性状态变到另一个一致性状态。一致性与原子性是密切相关的。
+        - 隔离性(isolatin)     一个事务的执行不能被其他事务干扰。即一个事务内部的操作及使用的数据对并发的其他事务是隔离的，并发执行的各个事务之间不能互相干扰。
+        - 持久性(durability)   持续性也称永久性(permanence)，指一个事务一旦提交，它对数据库中数据的改变就应该是永久性的。接下来的其他操作或故障不应该对其有任何影响。
+    Python DB API 2.0 的事务提供了两个方法commit或rollback。
+    实例：
+        sql = "delete from employee where age > %s" % (20)
+        try:
+            cursor.execute(sql)
+            db.commit()
+        except:
+            db.rollbacl()
+9. 错误处理
+    DB API中定义了一些数据库操作的错误及异常，下标列出了这些错误和异常：
+        Warning                 严重警告时触发
+        Error                   警告以外所有其他错误类
+        InterfaceError          数据库接口模块本身的错误(而不是数据库的错误)发生时触发
+        DatabaseError           和数据库有关的错误发生时触发
+        DataError               当有数据处理时的错误发生时触发
+        OperationalError        值非用户控制的，而是操作数据库时发生的错误
+        IntegrityError          完整性相关的错误
+        InternalError           数据库内部错误
+        ProgrammingError        程序错误
+        NotSupportedError       不支持错误，指使用了数据库不支持的函数或API等
