@@ -1,0 +1,201 @@
+Python类的专有方法
+    类不仅可以有访问权限、私有变量和私有方法，还可以定义专有方法。专有方法是在特殊的情况下使用特殊语法时由python调用的，而不是像普通方法一样在代码中直接调用。
+    # 看到形如 __xxx__的变量或函数名就要注意，这在python中使用特殊用途的。
+    # __init__我们知道怎么用了，python的class中有许多这种有特殊用途的函数，可以帮助我们定制类。下面介绍这种特殊类型的函数定制类的方法。
+1. __str__
+    # 介绍之前，我们先定义一个Student类，定义如下：
+    #!/usr/bin/python
+    # -*- coding: UTF-8 -*-
+    # 类的专有方法
+    class Student(object):
+        def __init__(self, name):
+            self.name = name
+    print(Student('小明'))
+    执行结果如下：
+        E:\Python\Python38\python.exe E:/py/py_zichen/python_base/PythonCode/python控制/Python类的专有方法.py
+        <__main__.Student object at 0x000002AF042F59A0>
+    执行结果输出一对字符串，一般人看不懂，没什么可用性，也不好看。怎样才能输出的好看呢？
+    只需要我们定义好__str__()方法，返回一个好看的字符串就可以了。重新定义上的实例：
+    #!/usr/bin/python
+    # -*- coding: UTF-8 -*-
+    class Student(object):
+        def __nint__(self, name):
+            self.name = name
+        def __str__(self):
+            return '学生名称： %s' % (self.name)
+    print(Student('小明'))
+    输出结果：
+        学生名称： 小明
+    由执行结果看到，这样的输出实例不但好看，而且使我们想要的。
+    如果在呼叫模式下输入如下：
+    #!/usr/bin/python
+    # -*- conding: UTF-8 -*-
+    # 类的专有方法
+    class Student(object):
+        def __init__(self, name):
+            self.name = name
+    s = Student('小明')
+    print(s)
+    output==>
+        E:\Python\Python38\python.exe E:/py/py_zichen/python_base/PythonCode/python控制/Python类的专有方法.py
+        <__main__.Student object at 0x000002AF042F59A0>
+
+    修改(在交互模式下)：
+    #!/usr/bin/python
+    # -*- conding: UTF-8 -*-
+    # 类的专有方法
+    class Student(object):
+        def __init__(self, name):
+            self.name = name
+        def __str__(self):
+            return '学生名称：%s' % self.name
+        __repr__ = __str__
+    s = Student('小明')
+    print(s)
+    output==>
+        学生名称： 小明
+2. __iter__
+    如果想要将一个雷用于for ... in 循环，类似list或tuple一样，就必须实现一个 __iter__()方法。该方法返回一个迭代对象，python的for循环会不断调用该迭代对象的__next__()方法，获得循环的下一个值，知道遇到StopIteration错误时退出循环。
+    我们一斐波那契数列为例，写一个可以作用域for循环的Fib类：
+        #!/usr/bin/python
+        # -*- conding: UTF-8 -*-
+        class Fib(object):
+            def __int__(self):      # 初始化两个计数器 a, b
+                self.a, self.b = 0, 1
+
+            def __iter__(self):     # 实例本身就是迭代对象，返回自己
+                return self
+
+            def __next__(self):
+                self.a, self.b = self.b, self.a + self.b        # 计算写一个值
+                if self.a > 100000:         # 退出循环的条件
+                    raise StopIteration()
+                return self.a           # 返回下一个值
+        # 下面我们把Fib实例作用域for循环
+        for n in Fib():
+            print(n)
+        output==>
+                1
+                1
+                2
+                3
+                5
+                8
+                13
+                21
+                34
+                55
+                89
+                144
+                233
+                377
+                610
+                987
+                1597
+                2584
+                4181
+                6765
+                10946
+                17711
+                28657
+                46368
+                75025
+3. __getitem__
+    Fib实例虽然能够作用域for循环，和list有点像，但是不能把它当成list使用。比如取第三个元素：
+        #!/usr/bin/python
+        # -*- coding: UTF-8 -*-
+        class Fib(object):
+            def __init__(self):
+                self.a, self.b = 0, 1
+            def __iter__(self):
+                return self
+            def __next__(self):
+                self.a, self.b = self.b, self.a + self.b
+                if self.a > 100000:
+                    raise StopIteration()
+                return self.a
+        for n in Fib()[3]:
+            print(n)
+        output==>
+            报错
+    要想像list一样取值，需要用到 __getitem__()方法:
+        #!/usr/bin/python
+        # -*- coding: UTF-8 -*-
+        class Fib(object):
+            def __init__(self):
+                self.a, self.b = 0, 1
+            def __iter__(self):
+                return self
+            def __next__(self):
+                self.a, self.b = self.b, self.a + self.b
+                if self.a > 100000:
+                    raise StopIteration()
+                return self.a
+            def __getitem__(self, n):
+                a, b = 1, 1
+                for x in range(n):
+                    a, b = b, a + b
+                return a
+        fib = Fib()
+        print(fib[3])
+        print(fib[8])
+4. __getattr__
+    正常情况下，调用类的方法或属性时，如果类的方法或属性不存在就会报错。比如定义Student类：
+        #!/usr/bin/python
+        # -*- coding: UTF-8 -*-
+        class Student(object):
+            def __init__(self):
+                self.name = "xiaoming"
+        stu = Student("xiaoming")
+        print(stu.name)
+        print(stu.score)
+        output==>
+            报错：由于没有score属性而报错
+    要想解决该问题，python给出了一个除了添加属性外的方法：
+        #!/usr/bin/python
+        # -*- coding: UTF-8 -*-
+        class Student(object):
+            def __init__(self):
+                self.name = 'xiaoming'
+            def __getattr(self, attr):
+                if attr == 'score':
+                    return 96
+        stu = Student('xiaoming')
+        print(stu.name)
+        print(stu.score)
+        output==>
+            xiaoming
+            96
+    注意，只有没有找到属性的情况下才去调用 __getattr__ 方法，已有的属性(如name)，不会在调用 __getattr__方法
+5. __call__
+    一个对象实例可以有自己的属性和方法，调用实例的方法时使用instance.method()调用。能不能直接在实例本身调用，答案是可以的。
+    任何类，只需要定义一个 __call__()方法，就可以直接对实例进行调用，例如：
+        #!/usr/bin/python
+        # -*- coding: UTF-8 -*-
+        class Student(object):
+            def __init__(self, name):
+                self.name = name
+            def __call__(self):
+                print('名称: %s' % self.name)
+        stu = Student('xiaoming')
+        stu()
+        output==>
+            名称: xiaoming
+    由输出结果看到，可以直接对实例进行调用并得到结果。
+    __call__()还可以定义参数。对实例进行直接调用就像对一个函数调用一样，完全可以把对象看成函数，把函数看成对象，因为这两者本来就是有根本的区别。
+    如果把对象看成函数，函数本身就可以在运行期间动态创建出来，因为类的实例都是运行期间创建出来的。
+
+    怎样判断一个变量是对象还是函数呢？
+    很多时候判断一个对象能否被调用，可以使用Callable()函数，比如函数和上面定义带有__call__()的类实例，输出如下：
+        print(Callable(Student('xiaoqing')))
+        print(Callable(max))
+        print(Callable([1, 2, 3]))
+        print(Callable(None))
+        print(Callable('a'))
+        output==>
+            True
+            True
+            False
+            False
+            False
+    由输出可以看出一个对象是否为"可调用"对象

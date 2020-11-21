@@ -1,0 +1,182 @@
+Python MySQL - mysql - connector驱动
+    MySQL是最流行的关系型数据库管理系统
+    本章介绍使用mysql-connector来链接使用MySQL，mysql-connector是MySQL官方提供的驱动器。
+    我们可以使用pip命令来安装mysql-connector：
+        python -m pip install mysql-connector
+    使用以下代码测试mysql-connector是否安装成功：
+        demo_mysql_test.py:
+            import mysql.connector
+    执行以上代码，如果没有产生错误，表明安装成功。
+1. 创建数据库连接
+    可以使用以下代码来链接数据库：
+    demo_mysql_test.py:
+        import mysql.connector
+        mydb = mysql.connector.connect(
+            host="localhost",       # 数据库主机地址
+            user="root"             # 用户名
+            password="root"         # 密码
+        )
+        print(mydb)
+    output==>
+        <mysql.connector.connection.MySQLConnection object at 0x000002AC9B2321F0>
+2. 创建数据库
+    创建数据库使用"create database"语句，以下创建一个名为runoob_db的数据库：
+    demo_mysql_test.py:
+        import mysql.connector
+        mydb = mysql.connector.connect(
+            host="localhost",       # 数据库主机地址
+            user="root"             # 用户名
+            password="root"         # 密码
+        )
+        mycursor = mydb.cursor()
+        mycursor.execute("create database runoob_db")
+    查看数据库：
+    demo_mysql_test.py:
+        import mysql.connector
+        mydb = mysql.connector.connect(
+            host="localhost",       # 数据库主机地址
+            user="root"             # 用户名
+            password="root"         # 密码
+        )
+        mycursor = mydb.cursor()
+        mycursor.execute("show databases")
+    output==>
+        ('information_schema',)
+        ('mysql',)
+        ('mysql_demo',)
+        ('performance_schema',)
+        ('runoob_db',)
+        ('sys',)
+    或者我们也可以直接链接数据库，如果不存在，则会报错：
+    demo_mysql_test.py:
+        import mysql.connector
+        mydb = mysql.connector.connect(
+            host="localhost",       # 数据库主机地址
+            user="root"             # 用户名
+            password="root"         # 密码
+            database="runoob_db"    # 数据库
+        )
+3. 创建数据表
+    import mysql.connector
+    mydb = mysql.connector.connect(
+        host="localhost",       # 数据库主机地址
+        user="root"             # 用户名
+        password="root"         # 密码
+        database="runoob_db"    # 数据库
+    )
+    mycursor = mydb.cursor()
+    mycursor.execute("create table sites (name varchar(255), url varchar(255))")
+
+    #!/usr/bin/python
+    # -*- coding: UTF-8 -*-
+    import mysql.connector
+
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="root",
+        database="runoob_db"
+    )
+
+    mycursor = mydb.cursor()
+    mycursor.execute("show tables")
+    if __name__ == '__main__':
+        for table in mycursor:
+            print(table)
+    output==>
+        ('sites',)
+4. 主键设置
+    创建表的时候我们一般都会设置一个主键(PRIMARY KEY)，我们可以使用"int auto_increment primary key"语句来创建一个主键，主键起始值为1，逐步递增。
+    如果我们的表已经创建，我们需要使用 "alter table" 来给表添加主键：
+    给sites表添加主键：
+        #!/usr/bin/python
+        # -*- coding: UTF-8 -*-
+        import mysql.connector
+
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="root",
+            database="runoob_db"
+        )
+
+        mycursor = mydb.cursor()
+        mycursor.execute("alter table sites add column id int auto_increment primary key")
+        # 如果还没有创建表，则可以使用以下形式来创建表并添加主键
+        mycursor.execute("create table sites (id int auto_increment primary key, name varchar(255), url varchar(255))")
+5. 插入数据
+    import mysql.connector
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="root",
+        database="runoob_db"
+    )
+    mycursor = mydb.cursor()
+    sql = "insert into sites (name, url) values (%s, %s)"
+    val = ("runoob", "https://www.runoob.com")
+    mycursor.execute(sql, val)
+    mydb.commit()
+    print(mycursor.rowcount, "记录插入成功。")
+6. 批量插入
+    批量插入使用executemany()方法，该方法的第二个参数是一个元组列表，包含了我们要插入的数据：
+    import mysql.connector
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="root",
+        database="runoob_db"
+    )
+    mycursor = mydb.cursor()
+    sql = "insert into sites (name, url) values (%s, %s)"
+    val = [('Google', 'https://www.google.com'),('Github', 'https://www.github.com'),('Taobao', 'https://www.taobao.com'),('stackoverflow', 'https://www.stackoverflow.com/')]
+    mycursor.executemany(sql, val)
+    mydb.commit()
+    print(mycursor.rowcount, "记录插入成功。")
+
+    我们也可以使用 mycursor.lastrowid，来获取主键的id
+7. 查询数据
+    import mysql.connector
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="root",
+        database="runoob_db"
+    )
+    mycursor = mydb.cursor()
+    # mycursor.execute("select * from sites")           # 获取所有字段数据
+    mycursor.execute("select name, url from sites")     # 获取指定字段的数据
+    myresult = mycursor.fetchall()      # 获取所有记录
+    # myresult = mycursor.fetchone()    # 获取一条数据
+    for x in myresult:
+        print(x)
+8. where条件语句
+    sql = "select * from sites where name = 'runoob'"
+    也可以使用通配符 %
+    sql = "select * from sites where name = '%oo%'"
+    为了房主数据库查询发生SQL注入攻击，我们可以使用占位符 %s:
+    sql = "select * from sites where name = %s"
+    na = ('runoob',)        # 元组，一个元素的元组需要有逗号 ,
+9. 排序
+    sql = "select * from sites where name = '%oo%' order by id desc"    # 默认asc
+10. limit
+    设置查询的数量
+    sql = "select * from sites limit 3"
+    output==> 最多会输出三条数据
+    也可以指定起始位置，使用关键字 offset:
+    sql = "select * from sites limit 3 offset 1"    # 0 为第一条，1 为第二条，2 为第三条，以此类推
+11. 删除记录
+    sql = "delete from sites where name = 'stackoverflow'"
+    注意：要慎重使用删除语句，删除语句要确保制定了where条件语句，否则会导致整个数据表数据全部被清理。
+    为了防止sql注入，我们使用占位符：
+    sql = "delete from sites where name = '%s'"
+    na = ('stackoverflow',)
+12. 更新表数据
+    sql = "update sites set name = 'zh' where name = 'zhihu'"
+    注意：update语句要确保指定了where条件语句，否则会导致整个表数据被更新。
+    为了防止sql注入问题，我们也可以使用占位符：
+    sql = "update sites set name = '%s' where name = '%s'"
+    na = ('zhihu', 'zh')
+13. 删除表
+    sql = "drop table if exists sites"   # 删除数据表sites
+    注意：删除表最好使用 if exists 关键字判断表sites是否存在，只有在存在的情况才执行删除操作。
