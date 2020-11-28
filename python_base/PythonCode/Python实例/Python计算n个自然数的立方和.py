@@ -9,4 +9,4 @@ def result(n):
 
 
 if __name__ == '__main__':
-    print(result(10))
+    print(result(5))
